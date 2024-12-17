@@ -36,6 +36,16 @@ public class HttpUtils <T> {
         return gson.fromJson(response.body(), User.class);
     }
 
+    public static User getUser(URI uri) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return gson.fromJson(response.body(), User.class);
+    }
+
     public static int deleteUserById(URI uri) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)

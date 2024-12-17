@@ -3,11 +3,13 @@ package main;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 public class API {
 
@@ -21,6 +23,26 @@ public class API {
 
     public static User putUser(URI uri, User user) throws IOException, InterruptedException {
         return HttpUtils.putUser(uri, user);
+    }
+
+    public static User getUserById(int id) throws IOException, InterruptedException {
+        String url = URI_USERS + "/" + id;
+        return HttpUtils.getUser(URI.create(url));
+    }
+
+    public static User getUserByUsername(String username) throws IOException, InterruptedException {
+        String uri = URI_USERS + "?username=" + username;
+        JsonObject user = HttpUtils.getJsonArray(URI.create(uri)).get(0).getAsJsonObject();
+        return gson.fromJson(user, User.class);
+    }
+
+    public static List<User> getUsers() throws IOException, InterruptedException {
+        JsonArray array = HttpUtils.getJsonArray(URI.create(URI_USERS));
+        List<User> users = new ArrayList<>();
+        for (JsonElement user: array) {
+            users.add(gson.fromJson(user, User.class));
+        }
+        return users;
     }
 
     public static int deleteUserByIdId(int id) throws IOException, InterruptedException {
@@ -63,7 +85,7 @@ public class API {
 
     // Task 3
 
-    public static ArrayList<String> getTodosOfUserById(int userId) throws IOException, InterruptedException {
+    public static List<String> getTodosOfUserById(int userId) throws IOException, InterruptedException {
         String uri = "https://jsonplaceholder.typicode.com/users/" + userId + "/todos";
         JsonArray array = HttpUtils.getJsonArray(URI.create(uri));
         ArrayList<String> todos = new ArrayList<>();
