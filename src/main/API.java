@@ -88,7 +88,7 @@ public class API {
     public static List<String> getTodosOfUserById(int userId) throws IOException, InterruptedException {
         String uri = "https://jsonplaceholder.typicode.com/users/" + userId + "/todos";
         JsonArray array = HttpUtils.getJsonArray(URI.create(uri));
-        ArrayList<String> todos = new ArrayList<>();
+        List<String> todos = new ArrayList<>();
         int counter = 1;
         for (JsonElement todo: array) {
             if (todo.getAsJsonObject().get("completed").getAsString().equals("true")) {
